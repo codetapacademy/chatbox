@@ -2,13 +2,15 @@ import { Box } from '@material-ui/core'
 import React from  'react'
 import { useState } from 'react'
 import { useEffect } from 'react'
-import { db } from '../../config/firestore'
+import { db, ts } from '../../config/firestore'
+
 
 const ChatBox = () => {
   const [message, setMessage] = useState('')
 
-  const [messageList, setMessageList] = useState(['da', 'nu'])
+  const [messageList, setMessageList] = useState([])
 
+  
 
   useEffect(() => {
     //mai tarziu
@@ -18,11 +20,9 @@ const ChatBox = () => {
         snap.docs.map(doc => doc.data().message)
       )
     })
-    setMessageList(['casa', 'apa', 'ulei'])
 
     return () => {
       // chem pe cine pot sa dau unsubscribe
-      
     }
   }, [])
 
@@ -36,8 +36,7 @@ const ChatBox = () => {
       message,
       sender: 'us',
       receiver: 'awesomeness',
-      date: 'none',
-      time: 'today',
+      date: ts,
     })
   }
 
@@ -46,10 +45,10 @@ const ChatBox = () => {
       <div>Chatbox</div>
       <ul>{messageList.map((value, key) => (
         <li key={key}>{value}</li>
-        
-        ))}</ul>
+        ))}
+      </ul>
       <Box>
-        <input type='text' onChange={updateChange} value={message}></input>
+        <input  type='text' onChange={updateChange} value={message}></input>
       <button onClick={onClick}>Send</button>
       </Box>
       
