@@ -3,6 +3,7 @@ import React from  'react'
 import { useState } from 'react'
 import { useEffect } from 'react'
 import { db, ts } from '../../config/firestore'
+import { BorderBox, TextBox } from './chatbox.styled'
 
 
 const ChatBox = () => {
@@ -43,10 +44,10 @@ const ChatBox = () => {
   return(
     <>
       <div>Chatbox</div>
-      <ul>{messageList.map((value, key) => (
-        <li key={key}>{value}</li>
+      <Box>{messageList.map((value, key) => (
+        <BorderBox key={key}>{value}</BorderBox>
         ))}
-      </ul>
+      </Box>
       <Box>
         <input  type='text' onChange={updateChange} value={message}></input>
       <button onClick={onClick}>Send</button>
