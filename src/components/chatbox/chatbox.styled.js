@@ -8,8 +8,4 @@ export const BorderBox = styled.ul`
  border: 2px solid grey;
  border-radius: 10px;
 `
-export const TextBox = styled.li`
- list-style: none;
-`
-
 

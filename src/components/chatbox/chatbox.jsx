@@ -1,35 +1,31 @@
-import { Box } from '@material-ui/core'
-import React from  'react'
-import { useState } from 'react'
-import { useEffect } from 'react'
-import { db, ts } from '../../config/firestore'
-import { BorderBox, TextBox } from './chatbox.styled'
-
+import { Box, Button } from '@material-ui/core'
+import React, { Fragment, useState,  useEffect } from  'react'
+import { db, date, auth, GitHubProvider } from '../../config/firestore'
+import { BorderBox } from './chatbox.styled'
 
 const ChatBox = () => {
   const [message, setMessage] = useState('')
+  const [photoURL, setPhotoURL] = useState('')
 
-  const [messageList, setMessageList] = useState([])
-
-  
+  const [messageList, setMessageList ] = useState([])
 
   useEffect(() => {
-    //mai tarziu
     db.collection('chat').onSnapshot((snap) => {
-      console.log(snap.docs.map((doc) => console.log(doc.data(), doc.id)))
       setMessageList(
-        snap.docs.map(doc => doc.data().message)
-      )
-    })
-
+        snap.docs.map(doc => ({
+          ...doc.data(),
+          id: doc.id
+        }))) 
+     })
     return () => {
-      // chem pe cine pot sa dau unsubscribe
-    }
+          //pe cine vreau
+        }
   }, [])
 
   const updateChange = (e) => {
     const {value} = e.target
     setMessage(value)
+    console.log(e, '##########################################')
   }
 
   const onClick = () => {
@@ -37,15 +33,33 @@ const ChatBox = () => {
       message,
       sender: 'us',
       receiver: 'awesomeness',
-      date: ts,
+      date,
     })
   }
 
+  console.log(messageList)
+  // console.log(date)
+
+
+  const login = async () => {
+    const raspuns = await auth.signInWithPopup(GitHubProvider)
+    console.log(raspuns.user.photoURL)
+    setPhotoURL(raspuns.user.photoURL)
+    
+    // auth.signInWithPopup(GitHubProvider).then((raspuns) => {console.log(raspuns)})
+    
+ }
+    
   return(
     <>
       <div>Chatbox</div>
-      <Box>{messageList.map((value, key) => (
-        <BorderBox key={key}>{value}</BorderBox>
+      <img src={photoURL} />
+      <Button onClick={login}>Login</Button>
+      <Box>{messageList.map((message) => (
+        <Fragment key={message.id}>
+          <BorderBox >{message && message.date && new Date(message.date.seconds * 1000).toISOString()}</BorderBox>
+          <BorderBox >{message.message}</BorderBox>
+        </Fragment>
         ))}
       </Box>
       <Box>
